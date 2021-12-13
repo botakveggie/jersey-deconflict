@@ -38,7 +38,7 @@ def conflict_command(update: Update, context: CallbackContext) -> None:
         """checks if conflicting number exists"""
         return True
     update.message.reply_text(init_message)
-    number_chosen = "Oh no! You cannot choose this number because it has lalready been chosen :'("
+    number_chosen = "Oh no! You cannot choose this number because it has already been chosen :'("
     number_ok = "Feel free to take this jersey number!"
     if conflict_exists():
         update.message.reply_text(number_chosen)
