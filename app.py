@@ -19,15 +19,31 @@ def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
     update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
+        fr'Hi {user.mention_markdown_v2()}\! This is the Jersey Deconflicting Bot!',
         reply_markup=ForceReply(selective=True),
     )
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    help_message = """Welcome to the Jersey Deconflicting Bot! This bot will inform you and your TM if a duplicate jersey number has been chosen! :)
+    """
+    update.message.reply_text(help_message)
 
+def conflict_command(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /conflict is issued."""
+    init_message = """Checking for conflict...
+    """
+    def conflict_exists():
+        """checks if conflicting number exists"""
+        return True
+    update.message.reply_text(init_message)
+    number_chosen = "Oh no! You cannot choose this number because it has already been chosen :'("
+    number_ok = "Feel free to take this jersey number!"
+    if conflict_exists():
+        update.message.reply_text(number_chosen)
+    else:
+        update.message.reply_text(number_ok)        
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
@@ -37,7 +53,7 @@ def echo(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater("TOKEN")
+    updater = Updater(bot_token)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -45,6 +61,7 @@ def main() -> None:
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("conflict", conflict_command))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
