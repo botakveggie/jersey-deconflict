@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Telegram Bot
+credentials.py
+__pycache__
