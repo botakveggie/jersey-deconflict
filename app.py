@@ -19,14 +19,16 @@ def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
     update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
+        fr'Hi {user.mention_markdown_v2()}\! This is the Jersey Deconflicting Bot!',
         reply_markup=ForceReply(selective=True),
     )
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    help_message = """Welcome to the Jersey Deconflicting Bot! This bot will inform you and your TM if a duplicate jersey number has been chosen! :)
+    """
+    update.message.reply_text(help_message)
 
 
 def echo(update: Update, context: CallbackContext) -> None:
