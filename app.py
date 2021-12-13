@@ -30,6 +30,20 @@ def help_command(update: Update, context: CallbackContext) -> None:
     """
     update.message.reply_text(help_message)
 
+def conflict_command(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /conflict is issued."""
+    init_message = """Checking for conflict...
+    """
+    def conflict_exists():
+        """checks if conflicting number exists"""
+        return True
+    update.message.reply_text(init_message)
+    number_chosen = "Oh no! You cannot choose this number because it has lalready been chosen :'("
+    number_ok = "Feel free to take this jersey number!"
+    if conflict_exists():
+        update.message.reply_text(number_chosen)
+    else:
+        update.message.reply_text(number_ok)        
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
@@ -47,6 +61,7 @@ def main() -> None:
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("conflict", conflict_command))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
