@@ -1,8 +1,9 @@
-from credentials import bot_token, bot_user_name,URL
+from credentials import BOT_TOKEN,URL
 
 import logging, os
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+import googleSheet as gs
 
 PORT = int(os.environ.get('PORT', 5000))
 # Enable logging
@@ -11,7 +12,7 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-TOKEN = os.environ[BOT_TOKEN]
+# TOKEN = os.environ[BOT_TOKEN]
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
@@ -34,16 +35,20 @@ def conflict_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /conflict is issued."""
     init_message = """Checking for conflict...
     """
-    def conflict_exists():
-        """checks if conflicting number exists"""
-        return True
-    update.message.reply_text(init_message)
-    number_chosen = "Oh no! You cannot choose this number because it has already been chosen :'("
-    number_ok = "Feel free to take this jersey number!"
-    if conflict_exists():
-        update.message.reply_text(number_chosen)
-    else:
-        update.message.reply_text(number_ok)        
+    id = 149552564
+    
+    json_list = gs.main()
+    for i in range(len(json_list)):
+        json = json_list[i]
+        cca_name = json["cca_name"]
+        context.bot.send_message(chat_id = id, text = "Conflict for "+ cca_name)
+        
+        string = "conflicting numbers are " + str(json["conflicting_numbers"])
+        context.bot.send_message(chat_id = id, text = string)
+        
+        string2 = "these people need to change their jersey numbers: \n" + str(json["conflicting_names"])
+        context.bot.send_message(chat_id = id, text = string2)
+
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
@@ -53,7 +58,7 @@ def echo(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater(bot_token)
+    updater = Updater(BOT_TOKEN)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher

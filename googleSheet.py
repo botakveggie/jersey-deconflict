@@ -52,12 +52,12 @@ def main():
         cca_name = (item.get("properties").get('title'))
         list_of_ccas.append(cca_name)
     # print (list_of_titles)
-
+    json_list = []
     for i in range(len(list_of_ccas)):
         if i==0:
             continue
         checking_range = list_of_ccas[i]+"!A3:E"
-        print("Conflict for " + list_of_ccas[i])
+        # print("Conflict for " + list_of_ccas[i])
     #   Getting spreadsheet.values()
         sheet = service.spreadsheets()
         result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
@@ -79,15 +79,19 @@ def main():
                     if choice not in conflict:
                         conflict.append(choice)
                 
-                # print('%s, %s' % (row[0], row[4]))
-    #     # Name, Size, Year, 1stChoice, 2ndChoice, 3rdChoice
-        print("conflicted jersey numbers are %s" % conflict)
+        # print("conflicted jersey numbers are %s" % conflict)
         
         need_to_change = []
         for num in conflict:
             need_to_change += jersey_choices[num]
-        print("please check jersey num for the following \n" + str(need_to_change))
-        
+        # print("please check jersey num for the following \n" + str(need_to_change))
+        json = {
+            "cca_name":list_of_ccas[i],
+            "conflicting_numbers":conflict,
+            "conflicting_names": need_to_change   
+        }  
+        json_list.append(json)
+    return json_list
 
 if __name__ == '__main__':
     main()
