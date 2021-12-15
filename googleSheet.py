@@ -47,43 +47,47 @@ def main():
     sheet_metadata = service.spreadsheets().get(spreadsheetId=SAMPLE_SPREADSHEET_ID).execute()
     list_of_sheets  = sheet_metadata.get('sheets')
     # print(len(list(list_of_sheets)))
-    list_of_titles = []
+    list_of_ccas = []
     for  item in list_of_sheets:
-        title = (item.get("properties").get('title'))
-        list_of_titles.append(title)
-    print (list_of_titles)
-    
+        cca_name = (item.get("properties").get('title'))
+        list_of_ccas.append(cca_name)
+    # print (list_of_titles)
 
-#   Getting spreadsheet.values()
-    sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range=SAMPLE_RANGE_NAME).execute()
-    values = result.get('values', [])
+    for i in range(len(list_of_ccas)):
+        if i==0:
+            continue
+        checking_range = list_of_ccas[i]+"!A3:E"
+        print("Conflict for " + list_of_ccas[i])
+    #   Getting spreadsheet.values()
+        sheet = service.spreadsheets()
+        result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                    range=checking_range).execute()
+        values = result.get('values', [])
 
-    jersey_choices = {}
-    conflict = []
-    
-    if not values:
-        print('No data found.')
-    else:
-        for row in values:
-            name, choice = row[NAME_COL], row[CHOICE_COL]
-            if choice not in jersey_choices.keys():
-                jersey_choices[choice] = [name]
-            else:
-                jersey_choices[choice].append(name)
-                if choice not in conflict:
-                    conflict.append(choice)
-            
-            # print('%s, %s' % (row[0], row[4]))
-#     # Name, Size, Year, 1stChoice, 2ndChoice, 3rdChoice
-    print("conflicted jersey numbers are %s" % conflict)
-    
-    need_to_change = []
-    for num in conflict:
-        need_to_change += jersey_choices[num]
-    print("please check jersey num for the following \n" + str(need_to_change))
-    
+        jersey_choices = {}
+        conflict = []
+        
+        if not values:
+            print('No data found.')
+        else:
+            for row in values:
+                name, choice = row[NAME_COL], row[CHOICE_COL]
+                if choice not in jersey_choices.keys():
+                    jersey_choices[choice] = [name]
+                else:
+                    jersey_choices[choice].append(name)
+                    if choice not in conflict:
+                        conflict.append(choice)
+                
+                # print('%s, %s' % (row[0], row[4]))
+    #     # Name, Size, Year, 1stChoice, 2ndChoice, 3rdChoice
+        print("conflicted jersey numbers are %s" % conflict)
+        
+        need_to_change = []
+        for num in conflict:
+            need_to_change += jersey_choices[num]
+        print("please check jersey num for the following \n" + str(need_to_change))
+        
 
 if __name__ == '__main__':
     main()
