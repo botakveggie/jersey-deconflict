@@ -1,17 +1,17 @@
 from credentials import bot_token, bot_user_name,URL
 
-import logging
-
+import logging, os
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+PORT = int(os.environ.get('PORT', 5000))
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 
 logger = logging.getLogger(__name__)
-
+TOKEN = os.environ[BOT_TOKEN]
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
