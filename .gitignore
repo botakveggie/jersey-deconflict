@@ -131,3 +131,5 @@ dmypy.json
 # Telegram Bot
 credentials.py
 __pycache__
+credentials_google.json
+token.json
