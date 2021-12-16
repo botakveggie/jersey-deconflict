@@ -1,5 +1,4 @@
-from credentials import BOT_TOKEN,URL
-
+from credentials import *
 import logging, os
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
@@ -24,7 +23,6 @@ def start(update: Update, context: CallbackContext) -> None:
         reply_markup=ForceReply(selective=True),
     )
 
-
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     help_message = """Welcome to the Jersey Deconflicting Bot! This bot will inform you and your TM if a duplicate jersey number has been chosen! :)
@@ -33,27 +31,32 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def conflict_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /conflict is issued."""
-    init_message = """Checking for conflict...
-    """
-    id = 149552564
+    id = TEST_TELE_ID
     
-    json_list = gs.main()
-    for i in range(len(json_list)):
-        json = json_list[i]
+    list_of_conflicts = gs.main()
+    for cca_number in range(len(list_of_conflicts)):
+        json = list_of_conflicts[cca_number]
         cca_name = json["cca_name"]
-        context.bot.send_message(chat_id = id, text = "Conflict for "+ cca_name)
+        json = json["conflicting_numbers"]
+        message = """
+            %s Conflict Status\n\n""" %  cca_name
         
-        string = "conflicting numbers are " + str(json["conflicting_numbers"])
-        context.bot.send_message(chat_id = id, text = string)
+        conflicting_numbers = json.keys()
         
-        string2 = "these people need to change their jersey numbers: \n" + str(json["conflicting_names"])
-        context.bot.send_message(chat_id = id, text = string2)
+        if len(conflicting_numbers) > 0:
+            message += """Conflicting Numbers: \n"""
+            for num in conflicting_numbers:
+                # print (", ".join(json[num]))
+                message += """  %s - %s\n""" % (num, ", ".join(json[num]))
+        else:
+            message += """No jersey conflict found"""
 
+        context.bot.send_message(chat_id = id, text = message)
+        
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
     update.message.reply_text(update.message.text)
-
 
 def main() -> None:
     """Start the bot."""
