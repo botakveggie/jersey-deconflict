@@ -47,7 +47,7 @@ def conflict_command(update: Update, context: CallbackContext) -> None:
             message += """Conflicting Numbers: \n"""
             for num in conflicting_numbers:
                 # print (", ".join(json[num]))
-                message += """  %s - %s\n""" % (num, ", ".join(json[num]))
+                message += """    %s - %s\n""" % (num, ", ".join(json[num]))
         else:
             message += """No jersey conflict found"""
 
